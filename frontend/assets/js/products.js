@@ -536,7 +536,7 @@
             chat.scrollTop = chat.scrollHeight;
 
             try {
-                var response = await fetch('[https://ai-par-tae-ecommerce.onrender.com/api/bargain](https://ai-par-tae-ecommerce.onrender.com/api/bargain)',  {
+                var response = await fetch('[https://nanb-e-ecommerce.onrender.com](https://nanb-e-ecommerce.onrender.com)',  {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
