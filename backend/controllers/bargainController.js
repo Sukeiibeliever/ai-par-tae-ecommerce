@@ -40,13 +40,13 @@ JSON Schema:
 `;
 
         // 503 တက်ပါက သုံးမည့် Fallback models များ
-        const modelsToTry = ["gemini-1.5-flash", "gemini-2.5-flash", "gemini-3.6-flash"];
+        const modelsToTry = ["gemini-2.5-flash-lite"];
         let data = null;
         let lastError = null;
 
         for (const modelName of modelsToTry) {
             // 503 တက်ရင် ခဏစောင့်ပြီး 2 ကြိမ်အထိ အော်တို Retry လုပ်မည့် logic
-            for (let attempt = 1; attempt <= 2; attempt++) {
+            for (let attempt = 1; attempt <= 1; attempt++) {
                 try {
                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
                         method: 'POST',
