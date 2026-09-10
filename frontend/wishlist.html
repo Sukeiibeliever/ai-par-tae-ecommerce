@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio Wishlist | NANB</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/NaNb.svg">
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="streetwear-body d-flex flex-column wishlist-page-active" style="min-height: 100vh; background-color: var(--c-light, #f8f9fa);">
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-hype">
+        <div class="container">
+           <a class="navbar-brand fw-extrabold fs-4 tracking-wider text-white d-flex align-items-center" href="index.html">
+                <img src="assets/images/NaNb.svg" alt="NaNb logo" class="brand-logo me-2 MainLogo"></a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-lg-3">
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="products.html">Shop All</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="contactus.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="aboutus.html">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="order.html">Order Tracking</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-hype" href="cart.html">
+                            <i class="fa-solid fa-cart-shopping me-1 fa-xl"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-hype active nav-wishlist-link" href="wishlist.html" aria-current="page">
+                            <i class="fa-solid fa-heart fa-xl"></i>
+                            <span class="nav-wishlist-count" data-wishlist-count>0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center gap-2 nav-auth-buttons">
+                        <a class="btn btn-nav-login" href="#" data-auth-open="loginModal">Login</a>
+                        <a class="btn btn-nav-signup" href="#" data-auth-open="signupModal">Signup</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- ─── MAIN WISHLIST GRID ─── -->
+    <main class="container my-5 py-4 flex-grow-1">
+        <div class="mb-5 pb-3 border-bottom border-secondary border-opacity-10 d-flex flex-wrap justify-content-between align-items-end gap-3 wishlist-page-head">
+            <div>
+                <h2 class="wishlist-page-title" style="font-family: var(--font-display, 'Bebas Neue', sans-serif); font-size: 3rem; letter-spacing: 1px; color: var(--c-dark, #1a1a1a);">MY WATCHLIST PORTFOLIO</h2>
+                <p class="small text-muted m-0">Monitor price tickers, tracking indices, and stock status for your curated wishlist targets.</p>
+            </div>
+            <span class="wishlist-portfolio-count" data-wishlist-portfolio-count>0 items saved</span>
+        </div>
+
+        <div id="wishlistEmptyPanel" class="page-empty-panel d-none"></div>
+
+        <div class="wishlist-table-wrap table-responsive bg-white rounded shadow-sm border border-light d-none d-md-block">
+            <table class="table table-hover align-middle m-0 wishlist-table">
+                <thead class="table-dark" style="background: var(--c-dark, #1a1a1a);">
+                    <tr class="small text-uppercase tracking-wider">
+                        <th scope="col" class="ps-4 py-3">Item Architecture</th>
+                        <th scope="col" class="py-3">Market Index Price</th>
+                        <th scope="col" class="py-3">Market Trend</th>
+                        <th scope="col" class="py-3">Smart Price Alert</th>
+                        <th scope="col" class="pe-4 py-3 text-end">Action Execution</th>
+                    </tr>
+                </thead>
+                <tbody id="wishlistTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="wishlistMobileList" class="wishlist-mobile-list d-md-none"></div>
+    </main>
+
+    <!-- ─── FOOTER AREA ─── -->
+    <footer class="footer-hype">
+        <div class="footer-color-bar"></div>
+    
+        <div class="container">
+            <div class="row g-5">
+    
+                <!-- Brand -->
+                <div class="col-lg-4">
+                    <img src="assets/images/NaNb.svg" alt="NaNb" class="footer-logo mb-3">
+    
+                    <p class="text-white-50 mb-4">
+                        Premium streetwear marketplace featuring exclusive local brands,
+                        authentic sneakers, accessories, and limited drops.
+                    </p>
+    
+                    <!-- Newsletter -->
+                    <h6 class="footer-heading">Stay Updated</h6>
+    
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="input-group">
+                            <input
+                                type="email"
+                                class="form-control newsletter-input"
+                                placeholder="Enter your email"
+                                required>
+    
+                            <button
+                                type="submit"
+                                class="btn newsletter-btn">
+                                Notify Me
+                            </button>
+                        </div>
+                    </form>
+    
+                    <small class="text-white-50">
+                        Get notified about new drops, sales and exclusive offers.
+                    </small>
+                </div>
+    
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-heading">Shop</h6>
+    
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html?category=sneakers">Sneakers</a></li>
+                        <li><a href="products.html?category=tees">Outfits</a></li>
+                        <li><a href="products.html?category=accessories">Accessories</a></li>
+                        <li><a href="wishlist.html">Wishlist</a></li>
+                    </ul>
+                </div>
+    
+                <!-- Customer Service -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-heading">Customer Service</h6>
+    
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="contactus.html">Contact Us</a></li>
+                        <li><a href="order.html">Order Tracking</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="returns.html">Returns & Refunds</a></li>
+                        <li><a href="shipping.html">Shipping Policy</a></li>
+                    </ul>
+                </div>
+    
+                <!-- Contact -->
+                <div class="col-lg-3">
+                    <h6 class="footer-heading">Contact</h6>
+    
+                    <ul class="footer-links list-unstyled">
+                        <li>
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            support@nanb.com
+                        </li>
+    
+                        <li class="mt-2">
+                            <i class="fa-solid fa-phone me-2"></i>
+                            +95 9 123 456 789
+                        </li>
+    
+                        <li class="mt-2">
+                            <i class="fa-solid fa-location-dot me-2"></i>
+                            Mandalay, Myanmar
+                        </li>
+                    </ul>
+    
+                    <div class="footer-social mt-4">
+                        <a href="https://www.facebook.com/nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--facebook" aria-label="NaNb on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--instagram" aria-label="NaNb on Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--tiktok" aria-label="NaNb on TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://www.youtube.com/@nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--youtube" aria-label="NaNb on YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+    
+            </div>
+    
+            <hr class="border-secondary my-4">
+    
+            <!-- Bottom -->
+            <div class="row align-items-center">
+    
+                <div class="col-md-6 text-center text-md-start">
+                    <small class="text-white-50">
+                        © 2026 NaNb. All Rights Reserved.
+                    </small>
+                </div>
+    
+                <div class="col-md-6 text-center text-md-end">
+                    <small>
+                        <a href="terms.html" class="text-white-50 me-3">
+                            Terms & Conditions
+                        </a>
+    
+                        <a href="privacy.html" class="text-white-50 me-3">
+                            Privacy Policy
+                        </a>
+    
+                        <a href="cookies.html" class="text-white-50">
+                            Cookie Policy
+                        </a>
+                    </small>
+                </div>
+    
+            </div>
+    
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/product-transform.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/cookies.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/wishlist.js"></script>
+    <script src="assets/js/form-utils.js"></script>
+    <script src="assets/js/human-check.js"></script>
+    <script src="assets/js/auth-modals.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

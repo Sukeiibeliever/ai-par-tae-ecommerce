@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication & Order History | NANB</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/NaNb.svg">
+    <link rel="apple-touch-icon" href="assets/images/NaNb.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="streetwear-body d-flex flex-column order-page-active" style="min-height: 100vh; background-color: var(--c-light, #f8f9fa);">
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-hype">
+        <div class="container">
+           <a class="navbar-brand fw-extrabold fs-4 tracking-wider text-white d-flex align-items-center" href="index.html">
+                <img src="assets/images/NaNb.svg" alt="NaNb logo" class="brand-logo me-2 MainLogo"></a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-lg-3">
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="products.html">Shop All</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="contactus.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-hype" href="aboutus.html">About Us</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-hype active nav-order-link" href="order.html" aria-current="page">
+                            <i class="fa-solid fa-truck-fast me-1"></i> Order Tracking
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-hype nav-cart-link" href="cart.html">
+                            <i class="fa-solid fa-cart-shopping fa-xl"></i>
+                            <span class="nav-cart-count" data-cart-count>0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-hype nav-wishlist-link" href="wishlist.html">
+                            <i class="fa-solid fa-heart fa-xl"></i>
+                            <span class="nav-wishlist-count" data-wishlist-count>0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center gap-2 nav-auth-buttons">
+                        <a class="btn btn-nav-login" href="#" data-auth-open="loginModal">Login</a>
+                        <a class="btn btn-nav-signup" href="#" data-auth-open="signupModal">Signup</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5 py-4 flex-grow-1">
+        <div class="max-w-3xl mx-auto" style="max-width: 850px; margin: 0 auto;">
+            
+            <div class="text-center mb-5">
+                <h2 style="font-family: var(--font-display, 'Bebas Neue', sans-serif); font-size: 3rem; letter-spacing: 2px; color: var(--c-dark, #1a1a1a);" data-i18n="order.title">AUTHENTICATION & ORDER RADAR</h2>
+                <p class="text-muted" data-i18n="order.subtitle">Enter your verification serial to audit current order status or review your historical purchase portfolio.</p>
+                <span class="order-portfolio-count mt-3" data-order-portfolio-count data-i18n="order.archived">0 orders archived</span>
+            </div>
+            <div class="card p-4 border-0 shadow-sm mb-5" style="background: #ffffff; border-left: 4px solid var(--c-dark, #1a1a1a) !important;">
+                <form id="orderTrackForm" action="" method="GET" class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label small fw-bold text-uppercase tracking-wider text-muted" data-i18n="order.label">Order ID / Certificate Serial</label>
+                        <input type="text" id="orderIdInput" name="order_id" class="form-control" style="border: 2px solid var(--c-dark, #1a1a1a); padding: 10px;" placeholder="e.g., NANB-1024" data-i18n-placeholder="order.placeholder" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase tracking-wider" style="background: var(--c-dark, #1a1a1a); letter-spacing: 1px;" data-i18n="order.verify">
+                            Verify & Track
+                        </button>
+                    </div>
+                </form>
+                <div id="orderTrackResult" class="mt-3"></div>
+            </div>
+
+            <div class="card border-0 shadow-sm overflow-hidden mb-5 order-active-card" style="background: #ffffff;">
+                <div class="p-4 text-white d-flex flex-wrap justify-content-between align-items-center gap-3 order-track-card-head" style="background: var(--c-dark, #1a1a1a);">
+                    <div>
+                        <span class="small opacity-50 text-uppercase d-block tracking-wider">Active Tracking Order</span>
+                        <span id="activeOrderId" class="fw-bold fs-5">#NANB-1024</span>
+                    </div>
+                    <div class="text-md-end">
+                        <span class="small opacity-50 text-uppercase d-block tracking-wider">Verification Status</span>
+                        <span id="activeOrderGrade" class="badge bg-success text-uppercase tracking-wider" style="font-size: 11px; padding: 6px 12px;">100% Passed (Genuine)</span>
+                    </div>
+                </div>
+
+                <div class="p-4 border-bottom border-light">
+                    <div class="row align-items-center g-3">
+                        <div class="col-auto">
+                            <div class="bg-light p-3 rounded">
+                                <i id="activeOrderIcon" class="fa-solid fa-shoe-prints fa-2x text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <span id="activeOrderBrand" class="small text-muted fw-bold text-uppercase">Jordan</span>
+                            <h5 id="activeOrderItem" class="fw-bold m-0 text-dark">Air Jordan 1 Retro High OG "Chicago"</h5>
+                            <span id="activeOrderDetail" class="small text-muted">Size: 10 US | Condition: 10/10 (Deadstock)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-light bg-opacity-50">
+                    <h6 class="fw-bold text-uppercase tracking-wider text-dark mb-3" style="font-size: 13px;"><i class="fa-solid fa-bell me-2 text-info"></i>Current Order Status</h6>
+                    <div id="orderStatusBadges" class="d-flex flex-wrap gap-2"></div>
+                    <p id="activeOrderStatusMessage" class="small text-muted mt-3 mb-0">
+                        <i class="fa-solid fa-circle-info me-1"></i> Loading order status...
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-5 order-portfolio-section">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <h4 class="order-portfolio-title" style="font-family: var(--font-display, 'Bebas Neue', sans-serif); font-size: 2rem; letter-spacing: 1px; margin: 0; color: var(--c-dark, #1a1a1a);"><i class="fa-solid fa-folder-open me-2 text-muted"></i>PAST PURCHASE PORTFOLIO</h4>
+                    <span class="badge bg-dark text-uppercase tracking-wider px-2 py-1" style="font-size: 10px;">Archive</span>
+                </div>
+
+                <div id="orderPortfolioEmptyPanel" class="page-empty-panel d-none"></div>
+
+                <div class="table-responsive bg-white rounded shadow-sm border border-light order-table-wrap d-none d-md-block">
+                    <table class="table table-hover align-middle m-0 order-portfolio-table">
+                        <thead class="table-dark" style="background: var(--c-dark, #1a1a1a);">
+                            <tr class="small text-uppercase tracking-wider" style="font-size: 11px;">
+                                <th scope="col" class="ps-4 py-3">Date</th>
+                                <th scope="col" class="py-3">Order / Vault ID</th>
+                                <th scope="col" class="py-3">Item Name</th>
+                                <th scope="col" class="py-3">Price</th>
+                                <th scope="col" class="py-3">Delivery Status</th>
+                                <th scope="col" class="pe-4 py-3 text-end">Appraisal Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderPortfolioBody"></tbody>
+                    </table>
+                </div>
+
+                <div id="orderMobileList" class="order-mobile-list d-md-none"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer-hype">
+        <div class="footer-color-bar"></div>
+    
+        <div class="container">
+            <div class="row g-5">
+    
+                <!-- Brand -->
+                <div class="col-lg-4">
+                    <img src="assets/images/NaNb.svg" alt="NaNb" class="footer-logo mb-3">
+    
+                    <p class="text-white-50 mb-4">
+                        Premium streetwear marketplace featuring exclusive local brands,
+                        authentic sneakers, accessories, and limited drops.
+                    </p>
+    
+                    <!-- Newsletter -->
+                    <h6 class="footer-heading">Stay Updated</h6>
+    
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="input-group">
+                            <input
+                                type="email"
+                                class="form-control newsletter-input"
+                                placeholder="Enter your email"
+                                required>
+    
+                            <button
+                                type="submit"
+                                class="btn newsletter-btn">
+                                Notify Me
+                            </button>
+                        </div>
+                    </form>
+    
+                    <small class="text-white-50">
+                        Get notified about new drops, sales and exclusive offers.
+                    </small>
+                </div>
+    
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-heading">Shop</h6>
+    
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html?category=sneakers">Sneakers</a></li>
+                        <li><a href="products.html?category=tees">Outfits</a></li>
+                        <li><a href="products.html?category=accessories">Accessories</a></li>
+                        <li><a href="wishlist.html">Wishlist</a></li>
+                    </ul>
+                </div>
+    
+                <!-- Customer Service -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-heading">Customer Service</h6>
+    
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="contactus.html">Contact Us</a></li>
+                        <li><a href="order.html">Order Tracking</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="returns.html">Returns & Refunds</a></li>
+                        <li><a href="shipping.html">Shipping Policy</a></li>
+                    </ul>
+                </div>
+    
+                <!-- Contact -->
+                <div class="col-lg-3">
+                    <h6 class="footer-heading">Contact</h6>
+    
+                    <ul class="footer-links list-unstyled">
+                        <li>
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            support@nanb.com
+                        </li>
+    
+                        <li class="mt-2">
+                            <i class="fa-solid fa-phone me-2"></i>
+                            +95 9 123 456 789
+                        </li>
+    
+                        <li class="mt-2">
+                            <i class="fa-solid fa-location-dot me-2"></i>
+                            Mandalay, Myanmar
+                        </li>
+                    </ul>
+    
+                    <div class="footer-social mt-4">
+                        <a href="https://www.facebook.com/nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--facebook" aria-label="NaNb on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--instagram" aria-label="NaNb on Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--tiktok" aria-label="NaNb on TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://www.youtube.com/@nanb.mandalay" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--youtube" aria-label="NaNb on YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+    
+            </div>
+    
+            <hr class="border-secondary my-4">
+    
+            <!-- Bottom -->
+            <div class="row align-items-center">
+    
+                <div class="col-md-6 text-center text-md-start">
+                    <small class="text-white-50">
+                        © 2026 NaNb. All Rights Reserved.
+                    </small>
+                </div>
+    
+                <div class="col-md-6 text-center text-md-end">
+                    <small>
+                        <a href="terms.html" class="text-white-50 me-3">
+                            Terms & Conditions
+                        </a>
+    
+                        <a href="privacy.html" class="text-white-50 me-3">
+                            Privacy Policy
+                        </a>
+    
+                        <a href="cookies.html" class="text-white-50">
+                            Cookie Policy
+                        </a>
+                    </small>
+                </div>
+    
+            </div>
+    
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/cookies.js"></script>
+    <script src="assets/js/form-utils.js"></script>
+    <script src="assets/js/human-check.js"></script>
+    <script src="assets/js/auth-modals.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/wishlist.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/order.js"></script>
+</body>
+</html>

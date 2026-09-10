@@ -1,0 +1,57 @@
+[
+    {
+        "orderId": "NANB-1024",
+        "status": "In Transit",
+        "item": "Air Jordan 1 Retro High OG \"Chicago\"",
+        "brand": "Jordan",
+        "category": "sneakers",
+        "price": 590000,
+        "grade": "10 / 10 (DS)",
+        "detail": "Size: 10 US | Condition: 10/10 (Deadstock)",
+        "updatedAt": "2026-06-14"
+    },
+    {
+        "orderId": "NANB-2048",
+        "status": "Delivered",
+        "item": "Stussy 8 Ball Heavy Tee",
+        "brand": "Stussy",
+        "category": "tees",
+        "price": 125000,
+        "grade": "10 / 10 (DS)",
+        "detail": "Size: L | Condition: 10/10 (Deadstock)",
+        "updatedAt": "2026-06-10"
+    },
+    {
+        "orderId": "NANB-2026-88F2",
+        "status": "Delivered",
+        "item": "Nike Dunk Low \"Panda\"",
+        "brand": "Nike",
+        "category": "sneakers",
+        "price": 340000,
+        "grade": "9.8 / 10 (DS)",
+        "detail": "Size: 9 US | Condition: 9.8/10",
+        "updatedAt": "2026-05-12"
+    },
+    {
+        "orderId": "NANB-2026-71A0",
+        "status": "Delivered",
+        "item": "Oversized Heavyweight Graphic Tee",
+        "brand": "No Aim Studio",
+        "category": "tees",
+        "price": 137000,
+        "grade": "10 / 10 (DS)",
+        "detail": "Size: XL | Condition: 10/10 (Deadstock)",
+        "updatedAt": "2026-04-05"
+    },
+    {
+        "orderId": "NANB-2026-44B1",
+        "status": "Cancelled",
+        "item": "Relaxed Fit Cargo Pants",
+        "brand": "Street Cult",
+        "category": "pants",
+        "price": 164000,
+        "grade": "",
+        "detail": "Size: 32 | Order cancelled by customer",
+        "updatedAt": "2026-03-18"
+    }
+]
