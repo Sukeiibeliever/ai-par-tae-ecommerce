@@ -536,15 +536,17 @@
             chat.scrollTop = chat.scrollHeight;
 
             try {
-                var response = await fetch('[https://nanb-e-ecommerce.onrender.com](https://nanb-e-ecommerce.onrender.com)',  {
+                var response = await fetch('https://nanb-e-ecommerce.onrender.com/api/bargain', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        productName: selectedProductForBargain.name,
-                        storePrice: selectedProductForBargain.price,
-                        internetPrice: selectedProductForBargain.marketPrice || selectedProductForBargain.price,
-                        userOffer: offer,
-                        lang: bargainCurrentLang
+                    headers: {
+                    'Content-Type': 'application/json'
+                            },
+            body: JSON.stringify({
+                    productName: selectedProductForBargain.name,
+                    storePrice: selectedProductForBargain.price,
+                    internetPrice: selectedProductForBargain.marketPrice || selectedProductForBargain.price,
+                    userOffer: offer,
+                    lang: bargainCurrentLang
                     })
                 });
 
