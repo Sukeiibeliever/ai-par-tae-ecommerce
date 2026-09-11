@@ -1,104 +1,172 @@
+const fetch = require("node-fetch");
+
 exports.handleBargain = async (req, res) => {
     try {
         const apiKey = process.env.GEMINI_API_KEY;
-        
+
         if (!apiKey) {
             console.error("GEMINI_API_KEY is missing");
-            return res.status(500).json({ 
-                status: "rejected", 
-                finalPrice: 0, 
-                message: "Server environment error: API Key missing." 
+
+            return res.status(500).json({
+                status: "rejected",
+                finalPrice: 0,
+                message: "Server configuration error: API key missing."
             });
         }
 
-        const { productName, storePrice, userOffer, lang } = req.body;
+        const {
+            productName,
+            storePrice,
+            userOffer,
+            lang
+        } = req.body;
 
-        const systemPrompt = `
-You are an intelligent AI bargaining assistant for a streetwear store in Mandalay named 'NaNb'.
 
-EXCHANGE RATE & CURRENCY RULE:
-- Strict Exchange Rate: Always use 1 USD = 4500 MMK for any currency conversions. Ignore official bank rates.
+        if (!productName || !storePrice || !userOffer) {
+            return res.status(400).json({
+                status: "rejected",
+                finalPrice: storePrice || 0,
+                message: "Missing product information."
+            });
+        }
 
-TASK:
-1. Search and estimate the current online/resell market price for '${productName}' in USD or MMK.
-2. Convert any USD market prices to MMK using EXACTLY 1 USD = 4500 MMK.
-3. Compare Our Store Price (${storePrice} MMK) with this calculated market value.
-4. Evaluate Customer Offer (${userOffer} MMK):
-   - If Customer Offer is reasonable relative to the item value, APPROVE it.
-   - If Customer Offer is moderately lower, propose a COUNTER OFFER.
-   - If Customer Offer is far too low, REJECT it politely.
 
-CRITICAL INSTRUCTION:
-Your entire response MUST be a valid, raw JSON object ONLY. Do NOT wrap in markdown, codeblocks (\`\`\`json), or extra text.
+        const selectedLanguage =
+            lang === "mm"
+                ? "Myanmar language"
+                : "English";
 
-JSON Schema:
+
+        const prompt = `
+You are NaNb AI Bargaining Assistant.
+
+Store:
+NaNb streetwear shop in Mandalay.
+
+Product:
+${productName}
+
+Original Store Price:
+${storePrice} MMK
+
+Customer Offer:
+${userOffer} MMK
+
+
+Rules:
+- Minimum acceptable price is 80% of original price.
+- If offer is acceptable, approve.
+- If offer is slightly low, give counter offer.
+- If offer is too low, reject politely.
+- Use MMK currency only.
+
+Reply language:
+${selectedLanguage}
+
+
+IMPORTANT:
+Return ONLY JSON.
+Do not use markdown.
+Do not add explanation.
+
+JSON format:
+
 {
-  "status": "approved" | "counter" | "rejected",
-  "finalPrice": number,
-  "message": "Friendly response mentioning live market price context using 1 USD = 4500 MMK in ${lang === 'mm' ? 'Myanmar Language' : 'English'}"
+ "status": "approved",
+ "finalPrice": 0,
+ "message": "friendly customer message"
 }
 `;
 
-        // 503 တက်ပါက သုံးမည့် Fallback models များ
-        const modelsToTry = ["gemini-2.5-flash-lite"];
-        let data = null;
-        let lastError = null;
 
-        for (const modelName of modelsToTry) {
-            // 503 တက်ရင် ခဏစောင့်ပြီး 2 ကြိမ်အထိ အော်တို Retry လုပ်မည့် logic
-            for (let attempt = 1; attempt <= 2; attempt++) {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: systemPrompt }] }],
-                            tools: [{ googleSearch: {} }]
-                        })
-                    });
-
-                    data = await response.json();
-                    
-                    if (response.ok) {
-                        lastError = null;
-                        break;
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    contents: [
+                        {
+                            parts: [
+                                {
+                                    text: prompt
+                                }
+                            ]
+                        }
+                    ],
+                    generationConfig: {
+                        temperature: 0.5,
+                        maxOutputTokens: 250
                     }
-
-                    lastError = data.error?.message || `Status: ${response.status}`;
-                    console.warn(`[Attempt ${attempt}] Model ${modelName} returned ${response.status}. Retrying...`);
-                    
-                    // 503 ဆိုရင် 1 စက္ကန့် စောင့်ပြီးမှ ပြန်ခေါ်မည်
-                    if (response.status === 503) {
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                    } else {
-                        break; // 404, 400 စသည့် အခြား error ဆိုလျှင် စောင့်မနေဘဲ နောက် model သို့ ကူးမည်
-                    }
-                } catch (err) {
-                    lastError = err.message;
-                }
+                })
             }
+        );
 
-            if (data && data.candidates) break;
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            console.error(
+                "Gemini API Error:",
+                JSON.stringify(data)
+            );
+
+            return res.status(response.status).json({
+                status: "rejected",
+                finalPrice: storePrice,
+                message:
+                    "AI service unavailable. Please try again."
+            });
         }
 
-        if (!data || !data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
-            throw new Error(lastError || "All available Gemini models are currently overloaded.");
+
+        let aiResponse =
+            data.candidates?.[0]
+            ?.content
+            ?.parts?.[0]
+            ?.text;
+
+
+        if (!aiResponse) {
+            throw new Error(
+                "Gemini returned empty response"
+            );
         }
 
-        let responseText = data.candidates[0].content.parts[0].text.trim();
-        responseText = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-        
-        const decision = JSON.parse(responseText);
-        return res.json(decision);
+
+        aiResponse = aiResponse
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+
+        const result = JSON.parse(aiResponse);
+
+
+        return res.json(result);
+
 
     } catch (error) {
-        console.error("Gemini Bargain API Error:", error.message || error);
-        return res.status(500).json({ 
-            status: "rejected", 
-            finalPrice: 0, 
-            message: req.body?.lang === 'mm' 
-                ? "အင်တာနက် စျေးနှုန်း စစ်ဆေးရာတွင် အမှားအယွင်းရှိပါသဖြင့် ပြန်လည် စမ်းသပ်ပါ။" 
-                : "Error checking live market prices. Please try again." 
+
+        console.error(
+            "Gemini Bargain API Error:",
+            error.message
+        );
+
+
+        return res.status(500).json({
+            status: "rejected",
+            finalPrice:
+                req.body?.storePrice || 0,
+
+            message:
+                req.body?.lang === "mm"
+                    ? "AI စနစ်တွင် အမှားရှိနေပါသည်။ ထပ်မံကြိုးစားပါ။"
+                    : "AI system error. Please try again."
         });
     }
 };
