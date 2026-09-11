@@ -48,14 +48,27 @@ JSON Schema:
             // 503 တက်ရင် ခဏစောင့်ပြီး 2 ကြိမ်အထိ အော်တို Retry လုပ်မည့် logic
             for (let attempt = 1; attempt <= 2; attempt++) {
                 try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: systemPrompt }] }],
-                            tools: [{ googleSearch: {} }]
-                        })
-                    });
+                  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 
+        'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify({
+        contents: [
+            {
+                parts: [
+                    {
+                        text: systemPrompt
+                    }
+                ]
+            }
+        ],
+        generationConfig: {
+            temperature: 0.5,
+            maxOutputTokens: 250
+        }
+    })
+});
 
                     data = await response.json();
                     
