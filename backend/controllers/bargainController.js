@@ -40,7 +40,7 @@ JSON Schema:
 `;
 
         // 503 တက်ပါက သုံးမည့် Fallback models များ
-        const modelsToTry = ["gemini-3.5-flash-lite"];
+        const modelsToTry = ["gemini-2.5-flash-lite"];
         let data = null;
         let lastError = null;
 
